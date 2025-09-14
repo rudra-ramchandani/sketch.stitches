@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sketch & Stitch - Draw It. Stitch It. Love It.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for animations, typography, and specific component looks */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark background */
+            color: #E5E7EB; /* Light text */
+        }
+
+        .font-brand {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Keyframe animations */
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(167, 139, 250, 0.4), 0 0 20px rgba(167, 139, 250, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(167, 139, 250, 0.7), 0 0 40px rgba(167, 139, 250, 0.4);
+            }
+        }
+
+        /* Apply animations to elements */
+        .animate-fade-in-down {
+            animation: fadeInDown 1s ease-out forwards;
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
+            opacity: 0; /* Start hidden */
+        }
+
+        /* Delay helper classes */
+        .animation-delay-200 { animation-delay: 200ms; }
+        .animation-delay-400 { animation-delay: 400ms; }
+        .animation-delay-600 { animation-delay: 600ms; }
+
+        .btn-primary {
+            transition: all 0.3s ease;
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(167, 139, 250, 0.3);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #A78BFA;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Interactive design studio canvas styling */
+        #tshirt-canvas {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 480px;
+            margin: auto;
+            transition: transform 0.3s ease;
+        }
+
+        #tshirt-image, #design-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        #design-overlay {
+            pointer-events: none; /* Allows clicks to go through to canvas if needed */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-sm shadow-lg">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="#" class="text-3xl font-brand font-bold text-white tracking-wider">Sketch<span class="text-violet-400">&</span>Stitch</a>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="nav-link text-gray-300 hover:text-violet-400">Our Process</a>
+                    <a href="#studio" class="nav-link text-gray-300 hover:text-violet-400">Design Studio</a>
+                    <a href="#gallery" class="nav-link text-gray-300 hover:text-violet-400">Gallery</a>
+                    <a href="#contact" class="nav-link text-gray-300 hover:text-violet-400">Contact</a>
+                </nav>
+                <a href="https://www.instagram.com/sketch.stiches" target="_blank" class="hidden md:inline-block bg-gray-800 text-violet-400 border border-violet-400 px-4 py-2 rounded-lg hover:bg-violet-400 hover:text-gray-900 transition-colors">
+                    Follow Us
+                </a>
+                <button id="mobile-menu-btn" class="md:hidden text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#about" class="block py-2 text-gray-300 hover:text-violet-400">Our Process</a>
+            <a href="#studio" class="block py-2 text-gray-300 hover:text-violet-400">Design Studio</a>
+            <a href="#gallery" class="block py-2 text-gray-300 hover:text-violet-400">Gallery</a>
+            <a href="#contact" class="block py-2 text-gray-300 hover:text-violet-400">Contact</a>
+             <a href="https://www.instagram.com/sketch.stiches" target="_blank" class="block mt-2 text-center bg-violet-500 text-white px-4 py-2 rounded-lg hover:bg-violet-600 transition-colors">
+                Follow Us on IG
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="pt-24">
+        <section class="relative h-screen flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-gray-900 opacity-60 z-10"></div>
+            <video autoplay loop muted playsinline class="absolute z-0 w-auto min-w-full min-h-full max-w-none">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-woman-sewing-a-white-cloth-on-a-machine-4246-large.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="container mx-auto px-6 text-center relative z-20">
+                <h1 class="text-5xl md:text-7xl font-brand font-bold text-white mb-4 animate-fade-in-down">Draw It. Stitch It. Love It.</h1>
+                <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-8 animate-fade-in-up animation-delay-200">Your imagination is the only limit. We turn your custom sketches into high-quality, wearable art.</p>
+                <a href="#studio" class="btn-primary bg-violet-500 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:bg-violet-600 animate-fade-in-up animation-delay-400">
+                    Start Designing Now
+                </a>
+            </div>
+        </section>
+
+        <!-- About / Our Process Section -->
+        <section id="about" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-brand font-bold text-white">How It Works</h2>
+                    <p class="text-violet-400 mt-2">A simple three-step journey to your perfect custom piece.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-10 text-center">
+                    <!-- Step 1 -->
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl transform hover:-translate-y-2 transition-transform duration-300 animate-fade-in-up animation-delay-200">
+                        <div class="text-violet-400 mb-4">
+                            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">1. Draw It</h3>
+                        <p class="text-gray-400">Unleash your creativity. Use our interactive design studio or upload your own sketch. Pick your apparel, colors, and placement.</p>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl transform hover:-translate-y-2 transition-transform duration-300 animate-fade-in-up animation-delay-400">
+                        <div class="text-violet-400 mb-4">
+                            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2 1M4 7l2-1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">2. Stitch It</h3>
+                        <p class="text-gray-400">Our expert artisans take over. Using state-of-the-art embroidery and printing tech, we meticulously bring your design to life on premium fabrics.</p>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl transform hover:-translate-y-2 transition-transform duration-300 animate-fade-in-up animation-delay-600">
+                        <div class="text-violet-400 mb-4">
+                            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">3. Love It</h3>
+                        <p class="text-gray-400">Receive your one-of-a-kind creation, packaged with care. Wear your story, your art, your unique piece. It's more than clothing; it's you.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Design Studio Section -->
+        <section id="studio" class="py-20 bg-gray-900/50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-brand font-bold text-white">Interactive Design Studio</h2>
+                    <p class="text-violet-400 mt-2">Bring your vision to life right here, right now.</p>
+                </div>
+                <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+                    <!-- Customization Controls -->
+                    <div class="mb-10 lg:mb-0">
+                        <div class="bg-gray-800 p-8 rounded-xl shadow-2xl space-y-6">
+                            <div>
+                                <label for="clothing-type" class="block text-sm font-medium text-gray-300 mb-2">1. Choose Apparel</label>
+                                <select id="clothing-type" class="w-full bg-gray-700 text-white border-gray-600 rounded-lg focus:ring-violet-500 focus:border-violet-500">
+                                    <option value="tshirt" data-image-url="https://www.customink.com/assets/site/mockups/t-shirts/04600/04600_00_300x350.png">T-Shirt</option>
+                                    <option value="hoodie" data-image-url="https://www.customink.com/assets/site/mockups/sweatshirts/28700/28700_00_300x350.png">Hoodie</option>
+                                    <option value="crewneck" data-image-url="https://www.customink.com/assets/site/mockups/sweatshirts/20100/20100_00_300x350.png">Crewneck</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">2. Pick a Color</label>
+                                <div id="color-swatches" class="flex flex-wrap gap-3">
+                                    <button class="color-swatch w-10 h-10 rounded-full border-2 border-white" style="background-color: #ffffff;"></button>
+                                    <button class="color-swatch w-10 h-10 rounded-full border-2 border-transparent" style="background-color: #111827;"></button>
+                                    <button class="color-swatch w-10 h-10 rounded-full border-2 border-transparent" style="background-color: #EF4444;"></button>
+                                    <button class="color-swatch w-10 h-10 rounded-full border-2 border-transparent" style="background-color: #3B82F6;"></button>
+                                    <button class="color-swatch w-10 h-10 rounded-full border-2 border-transparent" style="background-color: #22C55E;"></button>
+                                    <button class="color-swatch w-10 h-10 rounded-full border-2 border-transparent" style="background-color: #FBBF24;"></button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">3. Add Your Design</label>
+                                <div class="flex items-center space-x-4">
+                                    <input type="file" id="design-upload" class="hidden">
+                                    <button onclick="document.getElementById('design-upload').click()" class="flex-1 text-center bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
+                                        Upload Sketch
+                                    </button>
+                                    <button id="clear-design-btn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">Clear</button>
+                                </div>
+                            </div>
+                            <button class="w-full btn-primary bg-violet-500 text-white font-bold py-3 px-6 rounded-lg text-lg shadow-lg hover:bg-violet-600">
+                                Finalize & Get Quote
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Visualizer -->
+                    <div id="tshirt-canvas-container" class="flex justify-center items-center p-4 bg-gray-800 rounded-xl shadow-inner">
+                        <div id="tshirt-canvas">
+                            <img id="tshirt-image" src="https://www.customink.com/assets/site/mockups/t-shirts/04600/04600_00_300x350.png" alt="Customizable T-Shirt" class="transition-all duration-300">
+                            <img id="design-overlay" src="" alt="Custom Design">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-brand font-bold text-white">Community Creations</h2>
+                    <p class="text-violet-400 mt-2">See what others have stitched into reality.</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="grid gap-4">
+                        <div><img class="h-auto max-w-full rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=400" alt=""></div>
+                        <div><img class="h-auto max-w-full rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" src="https://images.unsplash.com/photo-1622445275463-afa2ab738c34?q=80&w=400" alt=""></div>
+                    </div>
+                    <div class="grid gap-4">
+                        <div><img class="h-auto max-w-full rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" src="https://images.unsplash.com/photo-1554568218-0f1715e72254?q=80&w=400" alt=""></div>
+                        <div><img class="h-auto max-w-full rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=400" alt=""></div>
+                    </div>
+                    <div class="grid gap-4">
+                        <div><img class="h-auto max-w-full rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=400" alt=""></div>
+                        <div><img class="h-auto max-w-full rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" src="https://images.unsplash.com/photo-1603217039659-535552914194?q=80&w=400" alt=""></div>
+                    </div>
+                    <div class="grid gap-4">
+                        <div><img class="h-auto max-w-full rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=400" alt=""></div>
+                        <div><img class="h-auto max-w-full rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300" src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400" alt=""></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact / Instagram Section -->
+        <section id="contact" class="py-20 bg-gray-900/50">
+            <div class="container mx-auto px-6 text-center">
+                 <h2 class="text-4xl font-brand font-bold text-white mb-4">Ready to Create?</h2>
+                 <p class="text-gray-300 max-w-xl mx-auto mb-8">Follow our journey and get inspired on Instagram. Tag us to be featured!</p>
+                 <a href="https://www.instagram.com/sketch.stiches" target="_blank" class="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-transform">
+                     <span class="font-bold">@</span>sketch.stiches
+                 </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-400">
+            <p>&copy; 2024 Sketch & Stitch. All Rights Reserved.</p>
+            <p class="text-sm mt-2">Crafted with ❤️ for creators everywhere.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // --- Interactive Design Studio Logic ---
+            const clothingTypeSelect = document.getElementById('clothing-type');
+            const tshirtImage = document.getElementById('tshirt-image');
+            const colorSwatches = document.getElementById('color-swatches');
+            const designUpload = document.getElementById('design-upload');
+            const designOverlay = document.getElementById('design-overlay');
+            const clearDesignBtn = document.getElementById('clear-design-btn');
+            
+            // 1. Change apparel type
+            clothingTypeSelect.addEventListener('change', (e) => {
+                const selectedOption = e.target.options[e.target.selectedIndex];
+                const newImageUrl = selectedOption.getAttribute('data-image-url');
+                tshirtImage.src = newImageUrl;
+            });
+
+            // 2. Change apparel color
+            colorSwatches.addEventListener('click', (e) => {
+                if (e.target.classList.contains('color-swatch')) {
+                    const color = e.target.style.backgroundColor;
+                    tshirtImage.style.filter = `opacity(0.5) drop-shadow(0 0 0 ${color})`;
+                    tshirtImage.style.backgroundColor = color; // Fallback for some images
+
+                    // Update active swatch style
+                    document.querySelectorAll('.color-swatch').forEach(swatch => {
+                        swatch.classList.remove('border-white');
+                        swatch.classList.add('border-transparent');
+                    });
+                    e.target.classList.remove('border-transparent');
+                    e.target.classList.add('border-white');
+                }
+            });
+
+            // 3. Upload and display design
+            designUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        designOverlay.src = event.target.result;
+                        designOverlay.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // 4. Clear the design
+            clearDesignBtn.addEventListener('click', () => {
+                designOverlay.src = '';
+                designOverlay.style.display = 'none';
+                designUpload.value = ''; // Reset file input
+            });
+
+            // --- Scroll Animations ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in-up-observed');
+                        entry.target.style.opacity = '1';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate-fade-in-up').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
